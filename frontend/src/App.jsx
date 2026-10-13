@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+// Automatically uses your live Render URL on Vercel, or localhost when running locally
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
@@ -19,7 +22,7 @@ function App() {
 
   const fetchTasks = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/tasks');
+      const res = await axios.get(`${API_URL}/api/tasks`);
       setTasks(res.data);
     } catch (err) {
       console.error(err);
@@ -29,7 +32,7 @@ function App() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/register', { name, email, password });
+      await axios.post(`${API_URL}/api/register`, { name, email, password });
       alert('Registration successful! Please login.');
       setIsRegistering(false);
     } catch (err) {
@@ -40,7 +43,7 @@ function App() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/login', { email, password });
+      const res = await axios.post(`${API_URL}/api/login`, { email, password });
       setUserName(res.data.name || name);
       setIsLoggedIn(true);
     } catch (err) {
@@ -52,7 +55,7 @@ function App() {
     e.preventDefault();
     if (!newTask.trim()) return;
     try {
-      await axios.post('http://localhost:5000/api/tasks', { title: newTask });
+      await axios.post(`${API_URL}/api/tasks`, { title: newTask });
       setNewTask('');
       fetchTasks();
     } catch (err) {
@@ -62,7 +65,7 @@ function App() {
 
   const deleteTask = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/tasks/${id}`);
+      await axios.delete(`${API_URL}/api/tasks/${id}`);
       fetchTasks();
     } catch (err) {
       console.error(err);
